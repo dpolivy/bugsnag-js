@@ -2,6 +2,7 @@
 
 #import "Bugsnag+Private.h"
 #import "BugsnagClient+Private.h"
+#import "BugsnagNotifier.h"
 #import "BugsnagReactNativeEmitter.h"
 #import "BugsnagConfigSerializer.h"
 #import "BugsnagEventDeserializer.h"
@@ -141,13 +142,10 @@ RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
 
 - (void)updateNotifierInfo:(NSDictionary *)info {
     NSString *jsVersion = info[@"notifierVersion"];
-    id notifier = [Bugsnag client].notifier;
-    [notifier setValue:jsVersion forKey:@"version"];
-    [notifier setValue:@"Bugsnag React Native" forKey:@"name"];
-    [notifier setValue: @"https://github.com/bugsnag/bugsnag-js" forKey:@"url"];
-
-    NSMutableArray *deps = [NSMutableArray arrayWithObject:[NSClassFromString(@"BugsnagNotifier") new]];
-    [notifier setValue:deps forKey:@"dependencies"];
+    Bugsnag.client.notifier.name = @"Bugsnag React Native";
+    Bugsnag.client.notifier.version = jsVersion;
+    Bugsnag.client.notifier.url = @"https://github.com/bugsnag/bugsnag-js";
+    Bugsnag.client.notifier.dependencies = @[[[BugsnagNotifier alloc] init]];
 }
 
 @end
