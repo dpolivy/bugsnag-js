@@ -1,4 +1,5 @@
 const Bugsnag = require('@bugsnag/electron')
+const nativeCrashes = require('@bugsnag/electron-test-helpers/src/native_crashes')
 
 module.exports = {
   uncaughtException () {
@@ -10,8 +11,14 @@ module.exports = {
     Promise.reject(new TypeError('invalid'))
   },
 
-  crash () {
-    process.crash()
+  crash (crashType) {
+    if (!crashType) {
+      process.crash()
+    } else if (nativeCrashes[crashType]) {
+      nativeCrashes[crashType]()
+    } else {
+      throw new Error(`unknown crashType: ${crashType}`)
+    }
   },
 
   notify () {

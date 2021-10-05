@@ -56,9 +56,9 @@ ipcMain.on('main-process-uncaught-exception', uncaughtException)
 
 ipcMain.on('main-process-notify', notify)
 
-ipcMain.on('main-process-crash', crash)
+ipcMain.on('main-process-crash', (_event, ...args) => crash(...args))
 
-ipcMain.on('delayed-main-process-crash', () => setTimeout(() => crash(), 1000))
+ipcMain.on('delayed-main-process-crash', (_event, ...args) => setTimeout(() => crash(...args), 1000))
 
 ipcMain.on('main-process-start-session', () => {
   Bugsnag.startSession()
